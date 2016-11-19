@@ -1,0 +1,24 @@
+[www]
+user = www-data
+group = www-data
+listen = /var/run/php-fpm.sock
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0750
+listen.allowed_clients = 127.0.0.1
+; process.priority = -19
+
+pm = dynamic
+pm.process_idle_timeout = 10s
+pm.max_children = 150
+pm.start_servers = 40
+pm.min_spare_servers = 35
+pm.max_spare_servers = 50
+pm.max_requests = 500
+
+request_terminate_timeout = 5m
+rlimit_files = 1024
+chdir = /
+catch_workers_output = yes
+clear_env = no
+security.limit_extensions = .php

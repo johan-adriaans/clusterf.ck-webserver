@@ -1,0 +1,25 @@
+[Unit]
+Description=Webserver (nginx+phpfpm) container
+After=docker.service
+After=docker-registry.service
+Requires=docker.service
+
+[service]
+environmentfile=/etc/network.env
+timeoutstartsec=0
+restartsec=15
+timeoutstartsec=2m
+restart=always
+execstartpre=-/usr/bin/docker kill webserver
+execstartpre=-/usr/bin/docker rm webserver
+execstartpre=/usr/bin/docker pull johanadriaans/clusterf.ck-webserver
+execstart=/usr/bin/docker run --rm --name webserver \
+  -e etcd_endpoints=127.0.0.1:2379 \
+  -v /mnt/data/user_data:/var/www/vhosts \
+  -p ${my_private_ipv4}:1080:80 \
+  --log-opt max-size=50m \
+  johanadriaans/clusterf.ck-webserver
+execstop=/usr/bin/docker stop webserver
+
+[X-Fleet]
+Global=true
